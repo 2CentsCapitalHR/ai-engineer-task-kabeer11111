@@ -2,7 +2,7 @@ import regex as re
 from docx import Document
 from app.models.llm_client import GeminiClient
 
-# Improved TYPE_RULES with more specific patterns and keywords
+
 TYPE_RULES = [
     ("Articles of Association", [
         r"\bArticles\s+of\s+Association\b",
@@ -156,7 +156,7 @@ def detect_doc_type(filepath):
     if not combined_text.strip():
         return "Unknown"
     
-    # Score each document type based on keyword matches
+    
     type_scores = {}
     
     for doc_type, patterns in TYPE_RULES:
@@ -164,7 +164,7 @@ def detect_doc_type(filepath):
         matches = []
         
         for pattern in patterns:
-            # Count matches in the text
+            
             if isinstance(pattern, str) and not pattern.startswith('\\b'):
                 # Simple string search
                 pattern_matches = len(re.findall(pattern, combined_text, flags=re.I))
@@ -182,7 +182,7 @@ def detect_doc_type(filepath):
                 'matches': matches
             }
     
-    # If we have clear matches, return the highest scoring type
+    
     if type_scores:
         best_match = max(type_scores.items(), key=lambda x: x[1]['score'])
         print(f"Document type detection for {filepath}:")
@@ -215,11 +215,11 @@ def detect_doc_type(filepath):
         
         response = gemini.ask(prompt, combined_text[:2000])
         
-        # Clean and validate the response
+        
         if response and response.strip():
             response = response.strip().replace('"', '').replace("'", "")
             
-            # Check if the response matches one of our known types
+            
             for doc_type, _ in TYPE_RULES:
                 if doc_type.lower() in response.lower():
                     print(f"LLM classified as: {doc_type}")
